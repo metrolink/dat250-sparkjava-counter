@@ -12,7 +12,6 @@ public class TCPPutRequest {
 	private static int port = 8080;
 	private static String host = "localhost";
 	private static String uri = "/counters";
-	private static String uri2 = "/todo";
 
 
 	public static void main(String[] args) {

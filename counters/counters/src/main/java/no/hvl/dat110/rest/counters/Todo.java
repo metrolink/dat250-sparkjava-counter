@@ -13,9 +13,29 @@ public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private Long id;
+    //private int id;
     private String summary;
     private String description;
+
+    public Todo(){
+
+        this.summary = "Here is a summary";
+
+        this.description = "Here is a description";
+    }
+
+    /*public Todo(int id, String sum, String desc){
+        this.id = id;
+        this.summary = sum;
+        this.description = desc;
+
+    }*/
+
+    public Todo(String sum, String desc){
+        this.summary = sum;
+        this.description = desc;
+
+    }
 
     public String getSummary() {
         return summary;

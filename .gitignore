@@ -21,3 +21,10 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+counters/counters/.idea/compiler.xml
+counters/counters/.idea/encodings.xml
+counters/counters/.idea/runConfigurations.xml
+counters/counters/.idea/misc.xml
+counters/counters/.idea/jpa-buddy.xml
+counters/counters/.idea/jarRepositories.xml
+counters/counters/.idea/vcs.xml

@@ -8,6 +8,7 @@ import static spark.Spark.post;
 import static spark.Spark.delete;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -20,7 +21,9 @@ import com.google.gson.Gson;
 public class App {
 	
 	static Counters counters = null;
-	static List<Todo> todoList = null;
+	static ArrayList<Todo> todoList = null;
+
+	static HashMap<Integer, Todo> todoMap = new HashMap<>();
 	
 	public static void main(String[] args) {
 
@@ -31,6 +34,8 @@ public class App {
 		} else {
 			port(8080);
 		}
+
+		todoMap.put(0, new Todo());
 
 		counters = new Counters();
 		todoList = new ArrayList<Todo>();
@@ -62,18 +67,35 @@ public class App {
         get("/todo", (req, res) -> { //could not translate ArrayList<Todo> into Todo.toJson();
         	Gson gson = new Gson();
         	
-        	String newString = gson.toJson(todoList);
+        	//String newString = gson.toJson(todoList);
+
+			String newString = gson.toJson(todoMap);
         	
         	return newString;
         });
+
+		get("/todo/:id", (req,res) -> {
+
+			Gson gson = new Gson();
+
+			int index = Integer.parseInt(req.params("id"));
+
+			/*Todo todos = todoList.get(index);
+
+			return gson.toJson(todos);*/
+
+			return todoMap.get(index).toJson();
+		});
+
+
         
-        put("/todo/*", (req,res) -> {
+        put("/todo/:id", (req,res) -> {
             
         	Gson gson = new Gson();
         	
-        	int index = Integer.parseInt(req.splat()[0])-1;
+        	int index = Integer.parseInt(req.params("id"));
         	
-        	Todo todos = todoList.get(index);
+        	/*Todo todos = todoList.get(index);
         	
         	Todo updated = gson.fromJson(req.body(), Todo.class);
         	
@@ -81,7 +103,11 @@ public class App {
         	
         	todos.setSummary(updated.getSummary());
         
-            return gson.toJson(todos);
+            return gson.toJson(todos);*/
+
+			todoMap.put(index, gson.fromJson(req.body(), Todo.class));
+
+			return todoMap.get(index).toJson();
         	
         });
         
@@ -89,23 +115,37 @@ public class App {
             
         	Gson gson = new Gson();
         	
-        	Todo todos = gson.fromJson(req.body(), Todo.class);
+        	/*Todo todos = gson.fromJson(req.body(), Todo.class);
+
+			todoList.add(todos);
         
-            return todos.toJson();
+            return gson.toJson(todoList);*/
+
+			int newId = todoMap.size();
+			while (todoMap.containsKey(newId)) {
+				newId += 1;
+			}
+
+			todoMap.put(newId, gson.fromJson(req.body(), Todo.class));
+
+			return todoMap.get(newId).toJson();
         	
         });
         
-        delete("/todo/*", (req,res) -> {
+        delete("/todo/:id", (req,res) -> {
             
         	Gson gson = new Gson();
         	
-        	String[] splat = req.splat();
+        	Integer n = Integer.parseInt(req.params("id"));
         	
-        	Integer n = Integer.parseInt(splat[0]);
-        	
-        	todoList.remove(n-1);
+        	/*todoList.remove(n);
         
-            return gson.toJson(todoList);
+            return gson.toJson(todoList);*/
+
+			Todo deletedTodo = todoMap.get(n);
+			todoMap.remove(n);
+
+			return deletedTodo.toJson();
         	
         });
         
